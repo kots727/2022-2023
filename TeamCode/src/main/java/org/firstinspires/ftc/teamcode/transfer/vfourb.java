@@ -32,12 +32,15 @@ public class vfourb
             case INTAKE_POSITION:
                 Running.setPosition(INTAKE_POSITION);
                 Supporting.setPosition(-INTAKE_POSITION);
+                break;
             case DEPOSIT_POSITION:
                 Running.setPosition(DEPOSIT_POSITION);
                 Supporting.setPosition(-DEPOSIT_POSITION);
+                break;
             case PRIMED:
                 Running.setPosition(PRIMED);
                 Supporting.setPosition(-PRIMED);
+                break;
         }
     }
 

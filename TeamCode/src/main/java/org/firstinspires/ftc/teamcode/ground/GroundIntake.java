@@ -33,12 +33,15 @@ public class GroundIntake
             case INTAKING:
                 intakeRunning.setPower(INTAKING);
                 intakeSupporting.setPower(INTAKING);
+                break;
             case DEPOSITING:
                 intakeRunning.setPower(REVERSE);
                 intakeSupporting.setPower(REVERSE);
+                break;
             case OFF:
                 intakeRunning.setPower(OFF);
                 intakeSupporting.setPower(OFF);
+                break;
         }
     }
 
