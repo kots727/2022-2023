@@ -7,8 +7,8 @@ public class vfourb
 {
     //temporary values
     static final double INTAKE_POSITION=1;
-    static final double DEPOSIT_POSITION=-.6;
-    static final double PRIMED = .8;
+    static final double DEPOSIT_POSITION=.25;
+    static final double PRIMED = .90;
 
     Servo Running;
     Servo Supporting;
@@ -31,19 +31,24 @@ public class vfourb
         {
             case INTAKE_POSITION:
                 Running.setPosition(INTAKE_POSITION);
-                Supporting.setPosition(-INTAKE_POSITION);
+                Supporting.setPosition(1-INTAKE_POSITION);
                 break;
             case DEPOSIT_POSITION:
                 Running.setPosition(DEPOSIT_POSITION);
-                Supporting.setPosition(-DEPOSIT_POSITION);
+                Supporting.setPosition(1-DEPOSIT_POSITION);
                 break;
             case PRIMED:
                 Running.setPosition(PRIMED);
-                Supporting.setPosition(-PRIMED);
+                Supporting.setPosition(1-PRIMED);
                 break;
         }
     }
-
+public double runPos(){
+        return Running.getPosition();
+}
+    public double supPos(){
+        return Supporting.getPosition();
+    }
     public State getState() {
         return state;
     }

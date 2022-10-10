@@ -113,7 +113,10 @@ public class practiceDriverCode extends LinearOpMode {
                 }
                 telemetry.addData("gi state", groundIntake.getState());
                 telemetry.addData("fesoijfesioj",fourbar.getState());
+                telemetry.addData("run",fourbar.runPos());
+            telemetry.addData("sup",fourbar.supPos());
 telemetry.update();
+
                 if (reset.wasJustPressed()) {
              //       turret.setState(Turret.State.RESET);
                //     slides.setState(Slides.State.INTAKE);
