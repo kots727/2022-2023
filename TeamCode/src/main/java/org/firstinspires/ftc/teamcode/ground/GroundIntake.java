@@ -25,10 +25,10 @@ boolean temp2 = false;
 
     public GroundIntake(HardwareMap hardwareMap)
     {
-        intakeRunning=hardwareMap.get(CRServo.class, "intakeR");
-        intakeSupporting = hardwareMap.get(CRServo.class, "intakeL");
+        intakeRunning=hardwareMap.get(CRServo.class, "gr");
+        intakeSupporting = hardwareMap.get(CRServo.class, "gl");
 distSens = hardwareMap.get(DistanceSensor.class, "distanceG");
-        intakeRunning.setDirection(CRServo.Direction.REVERSE);
+        intakeSupporting.setDirection(CRServo.Direction.REVERSE);
         setState(State.OFF);
     }
 
@@ -67,6 +67,15 @@ public boolean gSensor(){
         }
         return runningTrigger;
 
+}
+public boolean temp2e() {
+return temp2;
+}
+public double sensorVal(){
+        return distSens.getDistance(DistanceUnit.MM);
+}
+public boolean runningTriggere(){
+        return runningTrigger;
 }
     public void setState(State state)
     {

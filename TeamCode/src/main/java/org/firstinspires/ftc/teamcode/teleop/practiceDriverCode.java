@@ -16,21 +16,21 @@ import org.firstinspires.ftc.teamcode.Slides.Slides;
 import org.firstinspires.ftc.teamcode.ground.GroundIntake;
 import org.firstinspires.ftc.teamcode.transfer.Intake;
 import org.firstinspires.ftc.teamcode.transfer.vfourb;
+import org.firstinspires.ftc.teamcode.turret.Turret;
 
 @TeleOp
 public class practiceDriverCode extends LinearOpMode {
     Robot robot;
     Intake intake;
-    //Slides slides;
     Slides slide;
     vfourb fourbar;
     GroundIntake groundIntake;
-    // Turret turret;
+     Turret turret;
     GamepadEx primary;
     GamepadEx secondary;
     KeyReader[] keyReaders;
     TriggerReader intakeButton, deposit;
-    ButtonReader liftHigh, liftMedium, liftLow, junction, align ,reset,raiseLift,lowerLift,ninjaMode;
+    ButtonReader liftHigh, liftMedium, liftLow, junction, align ,reset,raiseLift,lowerLift,ninjaMode,liftBot;
     ToggleButtonReader activeGround;
 
     @Override
@@ -42,29 +42,35 @@ public class practiceDriverCode extends LinearOpMode {
         intake = robot.intake;
         fourbar = robot.fourbar;
         groundIntake = robot.groundIntake;
-      //  turret = robot.turret;
+        turret = robot.turret;
         keyReaders = new KeyReader[]{
                 intakeButton = new TriggerReader(primary, GamepadKeys.Trigger.RIGHT_TRIGGER),
                 ninjaMode = new ButtonReader(primary, GamepadKeys.Button.RIGHT_BUMPER),
                 liftHigh = new ButtonReader(primary, GamepadKeys.Button.LEFT_BUMPER),
-              //  liftMedium = new ButtonReader(secondary, GamepadKeys.Button.DPAD_UP),
-            //    liftLow = new ButtonReader(secondary, GamepadKeys.Button.DPAD_LEFT),
-           //     junction = new ButtonReader(secondary, GamepadKeys.Button.DPAD_DOWN),
+                liftMedium = new ButtonReader(primary, GamepadKeys.Button.DPAD_UP),
+                liftBot = new ButtonReader(primary, GamepadKeys.Button.DPAD_RIGHT),
+                liftLow = new ButtonReader(primary, GamepadKeys.Button.DPAD_LEFT),
+                junction = new ButtonReader(primary, GamepadKeys.Button.DPAD_DOWN),
                 deposit = new TriggerReader(primary, GamepadKeys.Trigger.LEFT_TRIGGER),
-             //   align = new ButtonReader(secondary, GamepadKeys.Button.RIGHT_BUMPER),
+                align = new ButtonReader(primary, GamepadKeys.Button.X),
                 reset = new ButtonReader(primary, GamepadKeys.Button.B),
                 raiseLift = new ButtonReader(primary, GamepadKeys.Button.DPAD_UP),
                 lowerLift = new ButtonReader(primary, GamepadKeys.Button.DPAD_DOWN),
                 activeGround = new ToggleButtonReader(primary, GamepadKeys.Button.A),
         };
         waitForStart();
-    //    slides.setState(Slides.State.INTAKE);
+
+  //      slide.setState(Slides.State.BOTTOM);
         fourbar.setState(vfourb.State.PRIMED);
         while (opModeIsActive()) {
+
             robot.update();
             for (KeyReader reader : keyReaders) {
                 reader.readValue();
             }
+        //    turret.setState(Turret.State.IDLE);
+          //  turret.update();
+      //      slide.update();
                 if (ninjaMode.isDown()) {
                     robot.setWeightedDrivePower(
                             new Pose2d(
@@ -88,31 +94,32 @@ public class practiceDriverCode extends LinearOpMode {
                 intake.setState(Intake.State.DEPOSITING);
             }
                 if (liftHigh.wasJustPressed()) {
-                    slide.setState(Slides.State.HIGH);
                     fourbar.setState(vfourb.State.DEPOSIT_POSITION);
-                    intake.setState(Intake.State.OFF);
                 }
-            if(groundIntake.gSensor()){
+                //ground intake auto
+             /*        if(groundIntake.gSensor()) {
                 intake.setState(Intake.State.INTAKING);
                 fourbar.setState(vfourb.State.INTAKE_POSITION);
-            }
-                /*
-                if (liftMedium.wasJustPressed()) {
-                    slides.setState(Slides.State.MID);
-                    fourbar.setState(vfourb.State.DEPOSIT_POSITION);
+            }*/
+            //cant go to deposit position as slides go up b/c robot can't go high enough
+                if(liftMedium.isDown()){
+                    slide.setState(Slides.State.HIGH);
                 }
-                if (liftLow.wasJustPressed()) {
-                    slides.setState(Slides.State.LOW);
-                    fourbar.setState(vfourb.State.DEPOSIT_POSITION);
+                else if(junction.isDown()){
+                    slide.setState(Slides.State.MID);
                 }
-                if (junction.wasJustPressed()) {
-                    slides.setState(Slides.State.GROUND);
-                    fourbar.setState(vfourb.State.DEPOSIT_POSITION);
+                else if(liftBot.isDown()){
+                    slide.setState(Slides.State.LOW);
                 }
-                if (align.wasJustPressed()) {
-                    turret.setState(Turret.State.ALIGNING);
+                else if(liftLow.isDown()){
+                    slide.setState(Slides.State.BOTTOM);
+                }
+                //this is not a good impl
+            /*    if(align.isDown()){
+                    turret.zero();
                 }*/
-
+                /*
+*/
                 if (activeGround.wasJustPressed()) {
                     if(groundIntake.getState() == GroundIntake.State.INTAKING){
                         groundIntake.setState(GroundIntake.State.OFF);
@@ -124,10 +131,17 @@ public class practiceDriverCode extends LinearOpMode {
                 telemetry.addData("V4B State: ",fourbar.getState());
             telemetry.addData("Left Ticks: ", slide.lpos());
             telemetry.addData("Right Ticks: ", slide.rpos());
+            telemetry.addData("Left Ticks: ", slide.ltarg());
+            telemetry.addData("Right Ticks: ", slide.rtarg());
+            telemetry.addData("turretTarg",turret.ltarg());
+            telemetry.addData("turretCurr",turret.rpos());
+            telemetry.addData("Running Trigger: ", groundIntake.runningTriggere());
+            telemetry.addData("Actual Sensor Value", groundIntake.sensorVal());
+            telemetry.addData("temp2: ", groundIntake.temp2e());
 telemetry.update();
 
                 if (reset.wasJustPressed()) {
-                    slide.setState(Slides.State.BOTTOM);
+                //    slide.setState(Slides.State.BOTTOM);
                     fourbar.setState(vfourb.State.PRIMED);
                 }
             }
